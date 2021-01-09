@@ -4,9 +4,23 @@ const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 
 module.exports = {
+    getLocations,
     isSupported,
     create
 };
+
+async function getLocations({pincode}) {
+    const pincodeCityStateMap = await db.PincodeCityStateMapping.findOne({ where: { pincode } });
+    if(pincodeCityStateMap) {
+        console.log(pincodeCityStateMap.state);
+        return {
+            state: pincodeCityStateMap.state,
+            city: pincodeCityStateMap.city
+        };
+    } else {
+        return null
+    }
+}
 
 async function isSupported({pincode, sku}) {
 
